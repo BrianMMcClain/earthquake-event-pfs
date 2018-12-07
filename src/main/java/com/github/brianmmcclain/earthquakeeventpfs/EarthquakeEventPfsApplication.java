@@ -58,7 +58,7 @@ public class EarthquakeEventPfsApplication {
 					row.put("id", rs.getString("id"));
 					row.put("timestamp", rs.getTimestamp("timestamp"));
 					row.put("lat", rs.getDouble("lat"));
-					row.put("lon", rs.getDouble("lat"));
+					row.put("lon", rs.getDouble("lon"));
 					row.put("mag", rs.getDouble("mag"));
 					row.put("address", rs.getString("address"));
 					returnList.add(row);
