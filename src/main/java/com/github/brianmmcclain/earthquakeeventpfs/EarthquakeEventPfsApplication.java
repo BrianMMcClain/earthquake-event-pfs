@@ -5,8 +5,14 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
 import java.util.Properties;
 import java.util.function.Function;
+
+import com.google.gson.Gson;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -44,11 +50,28 @@ public class EarthquakeEventPfsApplication {
 				Statement statement = conn.createStatement();
 				String queryStatement = "select * from events where timestamp > 'now'::timestamp - '24 hours'::interval;";
 				ResultSet rs = statement.executeQuery(queryStatement);
+				
+				List<Map<String, Object>> returnList = new ArrayList<Map<String, Object>>();
+
+				while (rs.next()) {
+					Map<String, Object> row = new HashMap<String, Object>();
+					row.put("id", rs.getString("id"));
+					row.put("timestamp", rs.getTimestamp("timestamp"));
+					row.put("lat", rs.getDouble("lat"));
+					row.put("lon", rs.getDouble("lat"));
+					row.put("mag", rs.getDouble("mag"));
+					row.put("address", rs.getString("address"));
+					returnList.add(row);
+				}
+
+				Gson gson = new Gson();
+				return gson.toJson(returnList);
 			} catch (SQLException e) {
 				// TODO: Process error
+				System.out.println(e.getMessage());
 			}
 
-			return "json response";
+			return "Error parsing request";
 			
 		};
     }
